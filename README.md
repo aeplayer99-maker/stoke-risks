@@ -1,0 +1,212 @@
+[stroke risks.html](https://github.com/user-attachments/files/26852471/stroke.risks.html)
+<!DOCTYPE html>
+<html>
+<head>
+  <title>StrokeRisk+ Pro</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #e9eef5;
+      text-align: center;
+    }
+
+    .phone {
+      width: 340px;
+      margin: 20px auto;
+      background: white;
+      border-radius: 25px;
+      padding: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+      color: #1e4f8a;
+      font-size: 22px;
+    }
+
+    .card {
+      background: #f7f9fc;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 15px;
+      font-size: 18px;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .blue { background: #2b6cb0; color: white; }
+    .red { background: #e53e3e; color: white; }
+    .green { background: #38a169; color: white; }
+
+    #riskMeter {
+      width: 100%;
+      height: 25px;
+      border-radius: 12px;
+      transition: 0.5s;
+    }
+
+    input[type=range] {
+      width: 100%;
+    }
+
+    #output {
+      margin-top: 10px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="phone">
+
+  <h2>🏥 StrokeRisk+</h2>
+
+  <!-- CLOCK -->
+  <div class="card">
+    🕒 Time: <b id="time"></b>
+  </div>
+
+  <!-- HEART RATE -->
+  <div class="card">
+    ❤️ Heart Rate: <b><span id="hr">80</span> bpm</b>
+    <input type="range" min="50" max="180" value="80" oninput="updateHR(this.value)">
+  </div>
+
+  <!-- RISK -->
+  <div class="card">
+    📊 Risk Level
+    <div id="riskMeter"></div>
+    <p id="riskText">Low Risk</p>
+  </div>
+
+  <!-- BUTTONS -->
+  <button class="blue" onclick="showFAST()">Check Stroke Signs (FAST)</button>
+  <button class="green" onclick="showTips()">Health Tips</button>
+  <button class="red" onclick="emergency()">🚨 SOS Emergency</button>
+
+  <!-- MEDICATION -->
+  <div class="card">
+    💊 Medication Reminders<br><br>
+
+    Morning: 08:00 AM  
+    Afternoon: 02:00 PM  
+    Night: 08:00 PM  
+
+    <button onclick="activateReminders()">Activate Reminders</button>
+  </div>
+
+  <div id="output"></div>
+
+</div>
+
+<script>
+
+// CLOCK
+function updateTime() {
+  let now = new Date();
+  document.getElementById("time").innerText =
+    now.toLocaleTimeString();
+}
+setInterval(updateTime, 1000);
+
+// HEART RATE + RISK
+function updateHR(value) {
+  document.getElementById("hr").innerText = value;
+
+  let meter = document.getElementById("riskMeter");
+  let text = document.getElementById("riskText");
+
+  if (value < 90) {
+    meter.style.background = "green";
+    text.innerText = "Low Risk";
+  } else if (value < 120) {
+    meter.style.background = "orange";
+    text.innerText = "Moderate Risk";
+  } else {
+    meter.style.background = "red";
+    text.innerText = "High Risk ⚠️";
+  }
+}
+
+// FAST SIGNS
+function showFAST() {
+  document.getElementById("output").innerHTML =
+    "⚠️ FAST Signs:<br><br>" +
+    "F - Face drooping<br>" +
+    "A - Arm weakness<br>" +
+    "S - Speech difficulty<br>" +
+    "T - Time to call emergency!";
+}
+
+// TIPS
+function showTips() {
+  document.getElementById("output").innerHTML =
+    "💡 Reduce Stroke Risk:<br><br>" +
+    "• Control blood pressure<br>" +
+    "• Exercise daily<br>" +
+    "• Eat healthy<br>" +
+    "• Stop smoking";
+}
+
+// EMERGENCY
+function emergency() {
+  alert("🚨 CALL EMERGENCY NOW!");
+}
+
+// SOUND ALERT
+function playSound() {
+  let audio = new Audio("https://www.soundjay.com/buttons/beep-07.wav");
+  audio.play();
+}
+
+// MULTIPLE REMINDERS
+let reminders = [
+  {h:8, m:0, name:"Morning Medication"},
+  {h:14, m:0, name:"Afternoon Medication"},
+  {h:20, m:0, name:"Night Medication"}
+];
+
+let triggered = {};
+
+function activateReminders() {
+  alert("Reminders Activated!");
+}
+
+setInterval(() => {
+  let now = new Date();
+
+  reminders.forEach((r, index) => {
+    if (
+      now.getHours() === r.h &&
+      now.getMinutes() === r.m &&
+      !triggered[index]
+    ) {
+      playSound();
+      alert("⏰ " + r.name + " Time!");
+      triggered[index] = true;
+    }
+  });
+
+  // reset daily
+  if (now.getHours() === 0 && now.getMinutes() === 0) {
+    triggered = {};
+  }
+
+}, 1000);
+
+</script>
+
+</body>
+</html>
